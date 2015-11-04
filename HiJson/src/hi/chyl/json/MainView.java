@@ -130,7 +130,9 @@ public class MainView extends FrameView {
         JButton btnClean = new JButton("清空(D)");
         JButton btnParse = new JButton("粘帖&格式化(V)");
         JButton btnNewLine = new JButton("清除(\\n)");
-        JButton btnXG = new JButton("清除(\\)");
+        JButton btnXG = new JButton("反转义(清除\\)");
+        JButton btnTJXG = new JButton("转义(添加\\)");
+        JButton btnCopy = new JButton("全部复制(C)");
         JButton btnTxtFind = new JButton("文本查找");
         JButton btnNodeFind = new JButton("节点查找");
         JButton btnNewTab = new JButton("新标签(N)");
@@ -168,7 +170,10 @@ public class MainView extends FrameView {
                 formatJson();
             }
         });
-
+        btnCopy.addActionListener((ActionEvent e) -> {
+            textViewCopy();
+        });
+        
         btnNewLine.addActionListener((ActionEvent e) -> {
             JTextArea ta = getTextArea();
             if (ta != null) {
@@ -181,6 +186,12 @@ public class MainView extends FrameView {
             if (ta != null) {
                 ta.setText(ta.getText().replaceAll("\\\\", ""));
             }
+        });
+
+        btnTJXG.addActionListener((ActionEvent e) -> {
+            JTextArea ta = getTextArea();
+            String str = escapeJava(ta.getText());
+            ta.setText(str);
         });
 
         btnTxtFind.addActionListener((ActionEvent e) -> {
@@ -221,8 +232,10 @@ public class MainView extends FrameView {
         toolbar.add(btnFormatAndPretty);
         toolbar.add(btnClean);
         toolbar.add(btnParse);
+        toolbar.add(btnCopy);
         toolbar.add(btnNewLine);
         toolbar.add(btnXG);
+        toolbar.add(btnTJXG);
         toolbar.add(btnNodeFind);
         toolbar.add(btnTxtFind);
         toolbar.addSeparator(new Dimension(30, 20));
@@ -232,6 +245,15 @@ public class MainView extends FrameView {
         return toolbar;
     }
 
+    private void textViewCopy() {
+        JTextArea ta = getTextArea();
+        System.out.println("textViewCopy textViewCopy textViewCopy");
+            if (ta != null) {
+                ta.selectAll();
+                ta.copy();
+            }
+    }
+    
     private int getTabIndex() {
         return tabbedContainer.getSelectionModel().getSelectedIndex();
     }
@@ -293,7 +315,7 @@ public class MainView extends FrameView {
         });
         editMenu.add(menuItemFormat);
 
-        JMenuItem pmenuItemFormat = createMenuItem("menuItemFormat", KeyEvent.VK_P);
+        JMenuItem pmenuItemFormat = createMenuItem("pmenuItemFormat", KeyEvent.VK_P);
         pmenuItemFormat.addActionListener((ActionEvent evt) -> {
             formatJson(true);
         });
@@ -313,6 +335,12 @@ public class MainView extends FrameView {
             addTab("NewTab", true);
         });
         toolMenu.add(menuItemNew);
+        
+        JMenuItem menuItemAllCopy = createMenuItem("menuItemAllCopy", KeyEvent.VK_I);
+        menuItemAllCopy.addActionListener((java.awt.event.ActionEvent evt) -> {
+            textViewCopy();
+        });
+        toolMenu.add(menuItemAllCopy);
 
         JMenuItem menuItemCode = createMenuItem("menuItemCode", KeyEvent.VK_T);
         menuItemCode.addActionListener((java.awt.event.ActionEvent evt) -> {
@@ -610,6 +638,14 @@ public class MainView extends FrameView {
         return getTable(getTabIndex());
     }
 
+    /**
+     *
+     * @param jsonString
+     */
+    private String escapeJava(String jsonString) {
+        return StringEscapeUtils.escapeJava(jsonString);
+    }
+
     private void formatJson(boolean prettyPrinting) {
         //格式化字符串
         JsonElement jsonEle;
@@ -631,6 +667,7 @@ public class MainView extends FrameView {
                 String jsonStr = gson.toJson(jsonEle);
                 if (jsonStr != null) {
                     jsonStr = StringEscapeUtils.unescapeJava(jsonStr);
+                    //jsonStr = StringEscapeUtils.escapeJava(jsonStr);
                     ta.setText(jsonStr);
                 }
             } else {
