@@ -12,9 +12,9 @@ import javax.swing.tree.DefaultMutableTreeNode;
  * @author CangYan
  */
 public class Kit {
-    public final static String split = " : ";
+    public final static String SPLIT = " : ";
     
-    public final static String sign = "-" ;
+    public final static String SIGN = "-" ;
     
     public final static String cNull = "k";
     public final static String cNum  = "n";
@@ -23,25 +23,25 @@ public class Kit {
     public final static String cStr  = "v";
     public final static String cBool = "b";
 
-    public final static String sNull = cNull + sign;
-    public final static String sNum  = cNum + sign;
-    public final static String sObj  = cObj + sign;
-    public final static String sArr  = cArr + sign;
-    public final static String sStr  = cStr + sign;
-    public final static String sBool = cBool + sign;
+    public final static String sNull = cNull + SIGN;
+    public final static String sNum  = cNum + SIGN;
+    public final static String sObj  = cObj + SIGN;
+    public final static String sArr  = cArr + SIGN;
+    public final static String sStr  = cStr + SIGN;
+    public final static String sBool = cBool + SIGN;
    
     public final static String array   = "Array";
     public final static String object  = "Object";
 
     public static DefaultMutableTreeNode nullNode(String key){
-        return treeNode(sNull + key + split +  "<null>");
+        return treeNode(sNull + key + SPLIT +  "<null>");
     }
     public static DefaultMutableTreeNode nullNode(int index){
         return nullNode(fkey(index));
     }
 
     public static DefaultMutableTreeNode numNode(String key,String val){
-        return treeNode(sNum + key + split + val);
+        return treeNode(sNum + key + SPLIT + val);
     }
     public static DefaultMutableTreeNode numNode(int index,String val){
         return numNode(fkey(index),val);
@@ -52,7 +52,7 @@ public class Kit {
          if (val){
              sVal = "true";
          }
-        return  treeNode(sBool + key + split + sVal);
+        return  treeNode(sBool + key + SPLIT + sVal);
     }
 
     public static DefaultMutableTreeNode boolNode(int index,Boolean val){
@@ -60,7 +60,7 @@ public class Kit {
     }
 
     public static DefaultMutableTreeNode strNode(String key,String val){
-        return  treeNode(sStr + key + split +"\"" + val + "\"");
+        return  treeNode(sStr + key + SPLIT +"\"" + val + "\"");
     }
     public static DefaultMutableTreeNode strNode(int index,String val){
         return  strNode(fkey(index),val);
@@ -129,7 +129,7 @@ public class Kit {
     public static String[] pstr(String str){
         String arr[] = new String[3];//类型,key,value
         arr[0] = str.substring(0,1);
-        int i = str.indexOf(Kit.split);
+        int i = str.indexOf(Kit.SPLIT);
 //        if(i<0) return arr;
         if(Kit.cArr.equals(arr[0])){
             arr[1] = str.substring(2);
@@ -147,8 +147,11 @@ public class Kit {
         return arr;
     }
 
-//    public static void main(String[] args){
-//        System.out.println(getIndex("[5]"));
-//    }
+    public static void main(String[] args){
+        System.out.println(getIndex("[5]"));
+        System.out.println(getIndex("[]"));
+        System.out.println(getIndex("[5]"));
+        System.out.println(getIndex("[5]"));
+    }
 
 }
